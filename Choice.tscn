@@ -1,0 +1,50 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Choice.gd" type="Script" id=1]
+[ext_resource path="res://ChineseButton.tscn" type="PackedScene" id=2]
+
+[node name="Choice" type="Container" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+script = ExtResource( 1 )
+
+[node name="Button" parent="." index="0" instance=ExtResource( 2 )]
+
+margin_left = 288.0
+margin_top = 40.0
+margin_right = 445.0
+margin_bottom = 125.0
+text = "简单"
+
+[node name="Button2" parent="." index="1" instance=ExtResource( 2 )]
+
+margin_left = 288.0
+margin_top = 161.0
+margin_right = 445.0
+margin_bottom = 246.0
+text = "中等"
+
+[node name="Button3" parent="." index="2" instance=ExtResource( 2 )]
+
+margin_left = 287.0
+margin_top = 293.0
+margin_right = 444.0
+margin_bottom = 378.0
+text = "困难"
+
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+
+[connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
+
+[connection signal="pressed" from="Button3" to="." method="_on_Button3_pressed"]
+
+

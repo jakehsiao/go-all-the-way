@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+
+custom_solver_bias = 0.0
+extents = Vector2( 10, 10 )
+
+[node name="CollisionShape2D" type="CollisionShape2D"]
+
+position = Vector2( 1.1, -0.049998 )
+scale = Vector2( 4.11538, 5.36538 )
+shape = SubResource( 1 )
+_sections_unfolded = [ "Transform" ]
+
+

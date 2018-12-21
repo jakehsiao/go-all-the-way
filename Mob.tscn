@@ -1,0 +1,34 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Mob.gd" type="Script" id=1]
+[ext_resource path="res://RandomWalker.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Sensor.tscn" type="PackedScene" id=3]
+[ext_resource path="res://BulletShooter.tscn" type="PackedScene" id=4]
+[ext_resource path="res://MobBody.tscn" type="PackedScene" id=5]
+[ext_resource path="res://MobCharacter.tscn" type="PackedScene" id=6]
+
+[node name="Mob" type="Node2D"]
+
+script = ExtResource( 1 )
+_sections_unfolded = [ "Transform" ]
+__meta__ = {
+"_edit_group_": true
+}
+speed_min = 50
+speed_max = 100
+
+[node name="RandomWalker" parent="." index="0" instance=ExtResource( 2 )]
+
+speed = 250
+
+[node name="Sensor" parent="." index="1" instance=ExtResource( 3 )]
+
+[node name="BulletShooter" parent="." index="2" instance=ExtResource( 4 )]
+
+[node name="MobBody" parent="." index="3" instance=ExtResource( 5 )]
+
+[node name="AnimatedSprite" parent="." index="4" instance=ExtResource( 6 )]
+
+_sections_unfolded = [ "Transform" ]
+
+

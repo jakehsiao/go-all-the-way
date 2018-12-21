@@ -1,0 +1,43 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ChineseLabel.tscn" type="PackedScene" id=1]
+[ext_resource path="res://ChineseButton.tscn" type="PackedScene" id=2]
+
+[node name="GameOver" type="Container" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+
+[node name="ChineseLabel" parent="." index="0" instance=ExtResource( 1 )]
+
+margin_left = 216.0
+margin_top = 63.0
+margin_right = 576.0
+margin_bottom = 155.0
+text = "你挂了"
+
+[node name="Button" parent="." index="1" instance=ExtResource( 2 )]
+
+margin_left = 216.0
+margin_top = 160.0
+margin_right = 373.0
+margin_bottom = 245.0
+text = "重来"
+
+[node name="Button2" parent="." index="2" instance=ExtResource( 2 )]
+
+margin_left = 215.0
+margin_top = 284.0
+margin_right = 372.0
+margin_bottom = 369.0
+text = "返回"
+
+

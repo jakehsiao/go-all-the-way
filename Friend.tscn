@@ -1,0 +1,78 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Friend.gd" type="Script" id=1]
+[ext_resource path="res://Sensor.tscn" type="PackedScene" id=2]
+[ext_resource path="res://BulletShooter.tscn" type="PackedScene" id=3]
+[ext_resource path="res://FriendSprite.tscn" type="PackedScene" id=4]
+[ext_resource path="res://FriendBody.tscn" type="PackedScene" id=5]
+[ext_resource path="res://PlayerParticle.tscn" type="PackedScene" id=6]
+[ext_resource path="res://NameLabelContainer.gd" type="Script" id=7]
+[ext_resource path="res://NameLabel.gd" type="Script" id=8]
+
+[sub_resource type="DynamicFontData" id=1]
+
+hinting = 2
+font_path = "res://Arial Unicode.ttf"
+_sections_unfolded = [ "Resource" ]
+
+[sub_resource type="DynamicFont" id=2]
+
+size = 20
+use_mipmaps = false
+use_filter = false
+font_data = SubResource( 1 )
+_sections_unfolded = [ "Font", "Settings" ]
+
+[node name="Friend" type="Node2D"]
+
+position = Vector2( 2.5, 0 )
+script = ExtResource( 1 )
+_sections_unfolded = [ "Transform" ]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sensor" parent="." index="0" instance=ExtResource( 2 )]
+
+scale = Vector2( 2, 2 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="BulletShooter" parent="." index="1" instance=ExtResource( 3 )]
+
+[node name="AnimatedSprite" parent="." index="2" instance=ExtResource( 4 )]
+
+[node name="FriendBody" parent="." index="3" instance=ExtResource( 5 )]
+
+[node name="PlayerParticle" parent="." index="4" instance=ExtResource( 6 )]
+
+[node name="NameLabelContainer" type="Node2D" parent="." index="5"]
+
+script = ExtResource( 7 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="NameLabel" type="Label" parent="NameLabelContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -68.0
+margin_top = -59.0
+margin_right = 68.0
+margin_bottom = -31.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+custom_fonts/font = SubResource( 2 )
+text = "王大明"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+script = ExtResource( 8 )
+_sections_unfolded = [ "Anchor", "Rect", "custom_colors", "custom_fonts" ]
+
+
