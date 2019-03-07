@@ -12,8 +12,8 @@ extends Node
 var parent # not able to defined here? = get_parent?
 var screensize
 
-var toward_friend = 1.5
-var toward_mob = 1.5
+var toward_friend = 1
+var toward_mob = 1
 var dashing = false
 
 export (int) var speed = 100
@@ -113,8 +113,5 @@ func _process(delta):
 	# EH: if node_exist then
 	var obj = parent.prior_object
 	if obj:
-		# Check if the nearest one is freed
-		if weakref(obj).get_ref():
-			# Check if the types are different
-			if ("Mob" in obj.name and "Friend" in parent.name) or ("Mob" in parent.name and "Friend" in obj.name):
-				get_node("../BulletShooter").shoot()
+		if ("Mob" in obj.name and "Friend" in parent.name) or ("Mob" in parent.name and "Friend" in obj.name):
+			get_node("../BulletShooter").shoot()

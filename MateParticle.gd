@@ -4,15 +4,13 @@ extends Particles2D
 # var a = 2
 # var b = "textvar"
 
+var heart = preload("res://heart.png")
+
 func _ready():
 	# Called when the node is added to the scene for the first time.
 	# Initialization here
-	var img = Image.new()
-	img.load("res://heart.png")
-	var tex = ImageTexture.new()
-	tex.create_from_image(img)
-	texture = tex
-
+	pass
+	
 #func _process(delta):
 #	# Called every frame. Delta is time since last frame.
 #	# Update game logic here.

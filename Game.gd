@@ -17,6 +17,10 @@ var screensize
 var spawn_count = 0
 var unit_count = 0
 	
+	
+var difficulty = 0.1
+
+signal pause(reason)
 
 func _ready():
 	# Called when the node is added to the scene for the first time.
@@ -40,11 +44,12 @@ func _ready():
 	# Play the game
 	gameplay()
 	
-	# Test the performance
+#	# Test the performance
+#	score = 20
 #	for i in range(50):
 #		add_friend(Vector2(rand_range(0, 500), rand_range(0,500)))
 #		add_mob(Vector2(rand_range(600, 800), rand_range(0, 500)))
-#	add_player()
+##	add_player()
 #
 	
 func add_player():
@@ -53,29 +58,40 @@ func add_player():
 	
 	# Set player's property here
 	player.position = Vector2(300, 300)
-	player.get_node("FriendBody/MateFeature/MateTimer").wait_time = 0.5
+	player.get_node("FriendBody/MateFeature/MateTimer").wait_time = 0.75
 	player.get_node("BulletShooter/BulletShooterTimer").wait_time = 0.25
-	player.get_node("FriendBody/BodyFeature").hp = 20
+	player.get_node("FriendBody/BodyFeature").hp = 20 # DEBUG to set 99999
+	player.name = "Friend_Player"
 	
 	
 	player.switch_controller() # Place all player settings inside this function
 	
 	# Set player's gene
 	player.gene = {
-		"bullet_rate": 0.5, # To balance the game, bullet_rate is set 0.5
+		"bullet_rate": 1, 
 		"sensor_range": 1,
-		"hp": 4,
-		"speed": 2, # To balance the game, speed is set 2 instead of 4
-		"mate_time": 0.5, # To balance the game okay, mate_time is 0.5 instead of 0.1
+		"hp": 1,
+		"speed": 3, # To balance the game, speed is set 3 instead of 1
+		"mate_time": 1, # To balance the game okay, mate_time is 1 instead of 0.25
 		"scale": 1,
 		"surname": player.display_name[0],
-		"toward_mob": 1,
-		"toward_friend": 1,
+		"toward_mob": 1.0,
+		"toward_friend": 1.0,
 	}
+	
+	# Feature v0.3: Get hidden gene
+#	var pk = player.gene.keys()
+#	for ek in ["toward_friend", "surname"]:
+#		pk.erase(ek)
+#	var hk = pk[randi() % pk.size()]
+#	player.gene[hk] *= 2
+	
+	# Set player's name label
+	player.get_node("NameLabelContainer/NameLabel").add_color_override("font_color", Color(1, 1, 0))
 	
 	return player
 	
-func add_friend(spawn_position, gene={}):
+func add_friend(spawn_position, gene={}, spawned=false):
 	# Spawn friend
 	print("Friend!")
 	var friend = Friend.instance()
@@ -85,6 +101,17 @@ func add_friend(spawn_position, gene={}):
 	
 	friend.gene = gene
 	friend.set_attrs()
+	
+	# Feature from v0.3: get 1 thing which the friend is really good at
+	# TODO: judge spawned automatically instead of assigned, may need the property of dict
+	if spawned:
+		var fkeys = friend.gene.keys()
+		var good_at = fkeys[randi() % fkeys.size()]
+		print("This friend ", friend.display_name, "is good at ", good_at)
+		if !(good_at  in ["surname", "speed", "hp"]):
+			friend.gene[good_at] *= 3
+		friend.set_attrs()
+		
 	print("Gene:", friend.gene) # After set_attrs, friend.gene is changed
 	
 	print("ShootWaitTime:", friend.get_node("BulletShooter/BulletShooterTimer").wait_time)
@@ -106,18 +133,11 @@ func add_mob(spawn_position):
 	
 	mob.position = spawn_position
 	
-	var mob_attrs = $Utils.generate_mob_attrs(score, 0.5 + 0.01*spawn_count) # Adjust the difficulty here
+	var mob_attrs = $Utils.generate_mob_attrs(score, difficulty) # Adjust the difficulty here
 	print("Attrs:", mob_attrs)
 	mob.set_attrs(mob_attrs)
 	
-	# Big mob to reduce slag
-	if (spawn_count > 20 and randf() < spawn_count / 100) or unit_count>50:
-		print("Big Mob!")
-		mob.scale *= 2
-		mob.get_node("RandomWalker").speed /= 2 # It should be slower
-		mob.get_node("MobBody/BodyFeature").hp *= 5 * pow((unit_count/50),2)
-		mob.get_node("BulletShooter/BulletShooterTimer").wait_time /= 5 * pow((unit_count/50),2)
-	
+		
 	print("ShootWaitTime:", mob.get_node("BulletShooter/BulletShooterTimer").wait_time)
 	print("SensorRange:", mob.get_node("Sensor").scale)
 	print("Speed:", mob.get_node("RandomWalker").speed)
@@ -148,8 +168,14 @@ func gameplay():
 	unit_count = 0
 	
 	$SpawnTimer.start()
-	$Message.show_message("目标: 获得100分！", 2)
-	
+	$Message.show_list_messages([
+	"目标: 获得100分！",
+	"上下左右移动 空格射击",
+	"和你长得一样的是队友",
+	"贴在队友身体上与队友交配\n从而获得分数",
+	"挑选基因优秀的队友进行交配\n是获胜的关键",
+	], 2, 3)
+
 func _process(delta):
 	# Called every frame. Delta is time since last frame.
 	# Update game logic here.
@@ -157,9 +183,9 @@ func _process(delta):
 	$Units.text = str(unit_count)
 	
 	# Check Win
-	if score >= 100:
+	if score >= 100: # DEBUG
 		# TODO: show win message
-		get_tree().paused = true
+		emit_signal("pause", "win")
 
 func _on_Bullet_shooted(shooter, shoot_obj, direction):
 	var b = Bullet.instance()
@@ -168,14 +194,21 @@ func _on_Bullet_shooted(shooter, shoot_obj, direction):
 	b.shoot_obj = shoot_obj
 	b.position = shooter.position
 	b.rotation = direction
+	
+	var rate = shooter.get_node("BulletShooter/BulletShooterTimer").wait_time
+	var sensor_range = sqrt(shooter.get_node("Sensor").scale.x)
+	
 	if "Mob" in b.shooter.name:
 		b.get_node("ColorRect").color = Color(1.0, 0.5, 0.5)
+	# TODO: get how this function is called
+	else:
+		b.get_node("ColorRect").color = Color(rate, rate, rate)
+		b.get_node("ColorRect").rect_scale = Vector2(sensor_range, sensor_range)
 	
 func _on_entity_dead(entity):
-	#print(entity, entity.name)
+	print("Entity dead ", entity, entity.name)
 	if entity == Player:
-		get_tree().paused = true
-		# TODO: HUD.show_game_over
+		emit_signal("pause", "game_over")
 	unit_count -= 1
 		
 func new_friend(pos, gene):
@@ -187,15 +220,15 @@ func new_friend(pos, gene):
 	$AddScore.show_message("+"+str(delta_score), 1)
 	$Score.text = str(score) # Update the score HUD
 	
-	add_friend(pos, gene)
+	if unit_count < 50:
+		add_friend(pos, gene)
 
 func _on_SpawnTimer_timeout():
 	var spawn_position = get_spawn_position()
 	var spawn_type = randf()
-	
 	# Change the conditions in "if" for adjusting friend spawning
-	if (spawn_type < 0.1 or spawn_count == 3) and spawn_count != 0:
-		add_friend(spawn_position)
+	if (spawn_type < 0.25 or spawn_count == 3) and spawn_count != 0:
+		add_friend(spawn_position, {}, true)
 	else:
 		add_mob(spawn_position)
 		

@@ -7,12 +7,7 @@ extends Particles2D
 func _ready():
 	# Called when the node is added to the scene for the first time.
 	# Initialization here
-	var img = Image.new()
-	img.load("res://dodge_assets/art/playerGrey_up1.png")
-	var tex = ImageTexture.new()
-	tex.create_from_image(img)
-	texture = tex
-	
+	pass
 	
 #func _process(delta):
 #	# Called every frame. Delta is time since last frame.

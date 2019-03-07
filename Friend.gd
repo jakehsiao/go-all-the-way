@@ -25,19 +25,29 @@ func _ready():
 	
 	# Init template properties
 	$BulletShooter/BulletShooterTimer.wait_time = 1
-	$RandomWalker.speed = 100
+	$RandomWalker.speed = 80
+	$FriendBody/BodyFeature.hp = 5
 	
 	# Init name
 	display_name = get_node("../NameGenerator").generate_name()
 	$NameLabelContainer/NameLabel.text = display_name
 	
 func get_gene_attr(attr_name, scale_min, scale_max):
+	# Generate numeric attributes
+	
 	# If attribute in gene, return that
 	# Else, WRITE that into the gene, and return the random value generated
 	if attr_name in gene.keys():
 		return gene[attr_name]
 	else:
+		# Generate the val
 		var val = rand_range(scale_min, scale_max)
+		# Mutate
+		if randf() < 0.01:
+			if randf() < 0.5:
+				val *= 2
+			else:
+				val /= 2
 		gene[attr_name] = val
 		return val
 		
@@ -50,26 +60,26 @@ func set_surname():
 	$NameLabelContainer/NameLabel.text = display_name
 
 func set_scale(scale_val):
-	scale *= scale_val
-	$FriendBody/BodyFeature.hp *= scale_val * scale_val
+	scale *= sqrt(scale_val)
+	$FriendBody/BodyFeature.hp *= scale_val
 
 func set_attrs():
 	# Combat
-	$BulletShooter/BulletShooterTimer.wait_time *= get_gene_attr("bullet_rate", 0.1, 2.0)
-	$Sensor.scale *= get_gene_attr("sensor_range", 0.1, 2)
+	$BulletShooter/BulletShooterTimer.wait_time /= get_gene_attr("bullet_rate", 0.8, 1.2)
+	$Sensor.scale *= get_gene_attr("sensor_range", 0.8, 1.2)
 	# HP
 	$FriendBody/BodyFeature.hp *= get_gene_attr("hp", 0.8, 1.2)
 	# Speed
-	$RandomWalker.speed *= get_gene_attr("speed", 0.25, 1.75)
+	$RandomWalker.speed *= get_gene_attr("speed", 0.75, 1.0) # Set slower to get mating easier
 	# Reproduction rate
-	$FriendBody/MateFeature/MateTimer.wait_time *= get_gene_attr("mate_time", 0.25, 1.75)
+	$FriendBody/MateFeature/MateTimer.wait_time /= get_gene_attr("mate_time", 0.8, 1.2)
 	# Scale
-	set_scale(get_gene_attr("scale", 0.5, 1.5))
+	set_scale(get_gene_attr("scale", 0.9, 1.1))
 	# Name
 	set_surname()
 	# Behaviour disposition
-	$RandomWalker.toward_mob *= get_gene_attr("toward_mob", 0.4, 1.6)
-	$RandomWalker.toward_friend *= get_gene_attr("toward_friend", 0.4, 1.6)
+	$RandomWalker.toward_mob *= get_gene_attr("toward_mob", 1.0, 1.1)
+	$RandomWalker.toward_friend *= get_gene_attr("toward_friend", 1.0, 1.1)
 	
 	
 func switch_controller():
@@ -78,13 +88,13 @@ func switch_controller():
 	if player_control:
 		get_node("Controller").replace_by(RandomWalker.instance())
 		get_node("Sensor").sort_objects = false
-		get_node("FriendBody/PlayerHealTimer").stop()
+		#get_node("FriendBody/PlayerHealTimer").stop()
 		
 		player_control = false
 	else:
 		get_node("RandomWalker").replace_by(Controller.instance())
 		get_node("Sensor").sort_objects = true
-		get_node("FriendBody/PlayerHealTimer").start()
+		#get_node("FriendBody/PlayerHealTimer").start()
 		
 		rotation = 0
 		player_control = true

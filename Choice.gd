@@ -18,10 +18,10 @@ func _ready():
 
 
 func _on_Button_pressed():
-	emit_signal("start_game", "easy")
+	emit_signal("start_game", 0.025)
 
 func _on_Button2_pressed():
-	emit_signal("start_game", "medium")
+	emit_signal("start_game", 0.0375)
 
 func _on_Button3_pressed():
-	emit_signal("start_game", "hard")
+	emit_signal("start_game", 0.05)

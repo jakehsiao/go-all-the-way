@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://MateParticle.gd" type="Script" id=1]
+[ext_resource path="res://heart.png" type="Texture" id=1]
+[ext_resource path="res://MateParticle.gd" type="Script" id=2]
 
 [sub_resource type="Gradient" id=1]
 
@@ -52,7 +53,7 @@ anim_offset_random = 0.0
 anim_loop = false
 _sections_unfolded = [ "Angle", "Angular Velocity", "Color", "Gravity", "Initial Velocity", "Linear Accel", "Scale", "Spread" ]
 
-[node name="MateParticle" type="Particles2D" index="0"]
+[node name="MateParticle" type="Particles2D"]
 
 position = Vector2( 0.124985, 0.187492 )
 rotation = -1.5708
@@ -71,11 +72,11 @@ visibility_rect = Rect2( -100, -100, 200, 200 )
 local_coords = false
 draw_order = 0
 process_material = SubResource( 3 )
-texture = null
+texture = ExtResource( 1 )
 normal_map = null
 h_frames = 1
 v_frames = 1
-script = ExtResource( 1 )
-_sections_unfolded = [ "Drawing", "Process Material", "Time", "Transform" ]
+script = ExtResource( 2 )
+_sections_unfolded = [ "Drawing", "Process Material", "Textures", "Time", "Transform" ]
 
 

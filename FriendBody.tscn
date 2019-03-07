@@ -23,19 +23,19 @@ __meta__ = {
 
 [node name="MateFeature" parent="." index="2" instance=ExtResource( 3 )]
 
-[node name="PlayerHealTimer" type="Timer" parent="." index="3"]
+[node name="FriendHealTimer" type="Timer" parent="." index="3"]
 
 process_mode = 1
-wait_time = 5.0
+wait_time = 2.0
 one_shot = false
-autostart = false
-
-[connection signal="area_entered" from="." to="MateFeature" method="_on_MateBody_area_entered"]
+autostart = true
 
 [connection signal="area_entered" from="." to="BodyFeature" method="_on_Body_area_entered"]
 
+[connection signal="area_entered" from="." to="MateFeature" method="_on_MateBody_area_entered"]
+
 [connection signal="area_exited" from="." to="MateFeature" method="_on_MateBody_area_exited"]
 
-[connection signal="timeout" from="PlayerHealTimer" to="BodyFeature" method="_on_HealTimer_timeout"]
+[connection signal="timeout" from="FriendHealTimer" to="BodyFeature" method="_on_HealTimer_timeout"]
 
 

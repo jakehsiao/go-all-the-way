@@ -1,10 +1,13 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Controller.gd" type="Script" id=1]
+[ext_resource path="res://MobileOperator.tscn" type="PackedScene" id=2]
 
 [node name="Controller" type="Node"]
 
 script = ExtResource( 1 )
 speed = 400
+
+[node name="MobileOperator" parent="." index="0" instance=ExtResource( 2 )]
 
 

@@ -12,6 +12,8 @@ var mate_obj
 var sperm = false # Change this name?
 var sperm_gene = {}
 
+var mate_list
+
 signal new_friend(pos, gene)
 
 func _ready():
@@ -24,39 +26,99 @@ func _ready():
 	
 	body = get_parent()
 	entity = body.get_parent()
+	
+	mate_list = []
 
 func _process(delta):
 #	# Called every frame. Delta is time since last frame.
 #	# Update game logic here.
 	pass
 
-
 func start_mating(obj):
 	mate_obj = obj
 	mating = true
-	$MateParticle.emitting = true
-	$MateTimer.start()
+#	$MateParticle.emitting = true
+	
+	# Fix 'mate object not found' bug(maybe)
+	if $MateTimer.wait_time < 1/30:
+		$MateTimer.wait_time = 1/30
+	
+#	$MateTimer.start()
+	$ReadyTimer.start()
 
 func stop_mating():
 	mate_obj = null
 	mating = false
 	sperm = false
 	$MateParticle.emitting = false
+	$ReadyTimer.stop()
 	$MateTimer.stop()
+	
+	
+	
+	# Feature: fix the not mating bug, but cause another bug
+	# Note: For not mating bug, I don't need to fix it now, fix it when --=some good methods about it come out
+#	if mate_list.size() > 0:
+#		var new_mater = mate_list[0]
+#		if !new_mater.mating:
+#			start_mating(new_mater)
+#			new_mater.start_mating(self)
 
 
 func _on_MateBody_area_entered(area):
 	var entity2 = area.get_parent()
-	if "FriendBody" in area.name and entity2 != entity and !mating:
+	
+	if "FriendBody" in area.name and entity2 != entity:
 		var mater = area.get_node("MateFeature")
-		if !mater.mating or mater.mate_obj == self:
+		mate_list.append(mater)
+		
+		if (!mating and !mater.mating) or mater.mate_obj == self:
 			start_mating(mater)
 		
 func _on_MateBody_area_exited(area):
 	var entity2 = area.get_parent()
-	if "FriendBody" in area.name and mating:
-		if mate_obj == entity2.get_node("FriendBody/MateFeature"):
+	
+	if "FriendBody" in area.name and entity2 != entity:
+		var mater = entity2.get_node("FriendBody/MateFeature")
+		mate_list.erase(mater)
+		
+		if mate_obj == mater:
 			stop_mating()
+			# Feature 3.0: Mate with other guys in mate_list
+			if mate_list.size() > 0:
+				for i in range(mate_list.size()):
+					var new_mater = mate_list[i]
+					if (!mating and !new_mater.mating) or new_mater.mate_obj == self:
+						start_mating(new_mater)
+						return
+
+
+#func start_mating(obj):
+#	mate_obj = obj
+#	mating = true
+#	$MateParticle.emitting = true
+#	$MateTimer.start()
+#
+#func stop_mating():
+#	mate_obj = null
+#	mating = false
+#	sperm = false
+#	$MateParticle.emitting = false
+#	$MateTimer.stop()
+#
+#
+#func _on_MateBody_area_entered(area):
+#	var entity2 = area.get_parent()
+#	if "FriendBody" in area.name and entity2 != entity and !mating:
+#		var mater = area.get_node("MateFeature")
+#		if !mater.mating or mater.mate_obj == self:
+#			start_mating(mater)
+#
+#func _on_MateBody_area_exited(area):
+#	var entity2 = area.get_parent()
+#	if "FriendBody" in area.name and mating:
+#		if mate_obj == entity2.get_node("FriendBody/MateFeature"):
+#			stop_mating()
 	
 func combine_gene(gene1, gene2):
 	var new_gene = {}
@@ -105,3 +167,7 @@ func _on_MateTimer_timeout():
 	else:
 		mate_obj.sperm = true
 		mate_obj.sperm_gene = entity.gene
+
+func _on_ReadyTimer_timeout():
+	$MateTimer.start()
+	$MateParticle.emitting = true

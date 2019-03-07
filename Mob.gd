@@ -16,7 +16,8 @@ func _ready():
 	
 	# Init properties
 	$BulletShooter/BulletShooterTimer.wait_time = 0.5
-	$RandomWalker.toward_friend = 0.5
+	$MobBody/BodyFeature.hp = 10
+	#$RandomWalker.toward_friend = 0.5
 	
 	pass
 	
@@ -37,7 +38,6 @@ func set_attrs(gene):
 	$BulletShooter/BulletShooterTimer.wait_time *= 1 / gene["bullet_rate"]
 	$MobBody/BodyFeature.hp *= gene["hp"]
 	$Sensor.scale *= sqrt(gene["sensor_range"])
-	$RandomWalker.toward_friend *= gene["toward_friend"]
 	
 
 func get_prior_object():

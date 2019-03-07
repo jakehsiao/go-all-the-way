@@ -15,8 +15,7 @@ func _ready():
 	# Called when the node is added to the scene for the first time.
 	# Initialization here
 	var game = get_parent().get_parent().get_parent()
-	if game.name == "Game":
-		connect("dead", game, "_on_entity_dead")
+	connect("dead", game, "_on_entity_dead")
 	body = get_parent()
 	entity = body.get_parent()
 	
@@ -30,24 +29,18 @@ func _process(delta):
 		
 
 func _on_Body_area_entered(area):
-	if "Bullet" in area.name:
-		var entity_shooter = area.shooter
-		var entity_obj = area.shoot_obj
-		#print("Bullet in", entity_shooter, entity_obj)
-		if weakref(entity).get_ref() and weakref(entity_obj).get_ref():
-			if entity.get("entity_type") == entity_obj.get("entity_type") and entity != entity_shooter:
-				# No need to directly shoot the object, enemy is okay, just like lol!
-				hp -= 1
-				area.explode()
+	if "Bullet" in area.name and area.shoot_obj == entity.entity_type and area.shooter != entity: # DEBUG
+		hp -= 1
+		area.explode()
 			
-	if "Body" in area.name:
-		# Fight
-		var entity2 = area.get_parent()
-		var bf2 = area.get_node("BodyFeature")
-		if entity.entity_type != entity2.entity_type:
-			hp -= 5 * entity2.scale.x
-			bf2.hp -= 5 * entity.scale.x
-		
+#	if "Body" in area.name:
+#		# Fight
+#		var entity2 = area.get_parent()
+#		var bf2 = area.get_node("BodyFeature")
+#		if entity.entity_type != entity2.entity_type:
+#			hp -= 5 * entity2.scale.x
+#			bf2.hp -= 5 * entity.scale.x
+#
 
 func _on_HealTimer_timeout():
 	if hp < hp_heal_max:

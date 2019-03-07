@@ -48,6 +48,15 @@ wait_time = 1.0
 one_shot = true
 autostart = false
 
+[node name="WaitTimer" type="Timer" parent="." index="1"]
+
+process_mode = 1
+wait_time = 1.0
+one_shot = false
+autostart = false
+
 [connection signal="timeout" from="ShowTimer" to="." method="_on_ShowTimer_timeout"]
+
+[connection signal="timeout" from="WaitTimer" to="." method="_on_WaitTimer_timeout"]
 
 

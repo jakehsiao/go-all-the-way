@@ -23,13 +23,13 @@ func _process(delta):
 	# Update game logic here.
 	
 	var velocity = Vector2() # The player's movement vector.
-	if Input.is_action_pressed("ui_right"):
+	if Input.is_action_pressed("ui_right") or $MobileOperator/Right.is_pressed():
 		velocity.x += 1
-	if Input.is_action_pressed("ui_left"):
+	if Input.is_action_pressed("ui_left") or $MobileOperator/Left.is_pressed():
 		velocity.x -= 1
-	if Input.is_action_pressed("ui_down"):
+	if Input.is_action_pressed("ui_down") or $MobileOperator/Down.is_pressed():
 		velocity.y += 1
-	if Input.is_action_pressed("ui_up"):
+	if Input.is_action_pressed("ui_up") or $MobileOperator/Up.is_pressed():
 		velocity.y -= 1
 	if velocity.length() > 0:
 		velocity = velocity.normalized() * speed
@@ -39,7 +39,7 @@ func _process(delta):
 		parent.get_node("AnimatedSprite").stop()
 		parent.get_node("PlayerParticle").emitting = false
 			
-	if Input.is_key_pressed(KEY_SPACE) and parent.prior_object:
+	if (Input.is_key_pressed(KEY_SPACE) or $MobileOperator/Shoot.is_pressed()) and parent.prior_object:
 		#get_tree().paused = true
 		parent.get_node("BulletShooter").shoot()
 		

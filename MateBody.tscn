@@ -3,7 +3,7 @@
 [ext_resource path="res://MateBody.gd" type="Script" id=1]
 [ext_resource path="res://MateParticle.tscn" type="PackedScene" id=2]
 
-[node name="MateFeature" type="Node2D"]
+[node name="MateFeature" type="Node2D" index="0"]
 
 script = ExtResource( 1 )
 
@@ -14,10 +14,19 @@ lifetime = 0.5
 [node name="MateTimer" type="Timer" parent="." index="1"]
 
 process_mode = 1
-wait_time = 5.0
+wait_time = 3.0
 one_shot = false
 autostart = false
 
+[node name="ReadyTimer" type="Timer" parent="." index="2"]
+
+process_mode = 1
+wait_time = 1.75
+one_shot = true
+autostart = false
+
 [connection signal="timeout" from="MateTimer" to="." method="_on_MateTimer_timeout"]
+
+[connection signal="timeout" from="ReadyTimer" to="." method="_on_ReadyTimer_timeout"]
 
 

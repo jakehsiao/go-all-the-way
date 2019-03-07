@@ -11,8 +11,8 @@ func _ready():
 	
 	# connect
 	var game = get_parent().get_parent()
-	if game.name == "Game":
-		connect("shoot_bullet", game, "_on_Bullet_shooted")
+	#if game.name == "Game":
+	connect("shoot_bullet", game, "_on_Bullet_shooted")
 	
 	
 func _process(delta):
@@ -23,9 +23,14 @@ func _process(delta):
 func shoot():
 	if $BulletShooterTimer.is_stopped():
 		var parent = get_parent()
-		var obj = parent.prior_object
-		var direction = parent.position.angle_to_point(obj.position)
+		var obj = parent.prior_object.get("entity_type")
+		var direction = parent.position.angle_to_point(parent.prior_object.position)
 		direction += PI
 		emit_signal("shoot_bullet", parent, obj, direction)
+		
+		# Limit the shooter's waittime to 2 frames a shoot
+		if $BulletShooterTimer.wait_time < 1 / 30:
+			$BulletShooterTimer.wait_time = 1 / 30
+		
 		$BulletShooterTimer.start()
 	

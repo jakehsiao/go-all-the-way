@@ -3,7 +3,7 @@
 [ext_resource path="res://Choice.gd" type="Script" id=1]
 [ext_resource path="res://ChineseButton.tscn" type="PackedScene" id=2]
 
-[node name="Choice" type="Container" index="0"]
+[node name="Choice" type="Container"]
 
 anchor_left = 0.0
 anchor_top = 0.0

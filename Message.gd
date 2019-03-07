@@ -4,6 +4,10 @@ extends Label
 # var a = 2
 # var b = "textvar"
 
+var contents = []
+var dur = 1.5
+var interval = 3.5
+
 func _ready():
 	# Called when the node is added to the scene for the first time.
 	# Initialization here
@@ -19,6 +23,30 @@ func show_message(content, dur=1):
 	show()
 	$ShowTimer.wait_time = dur
 	$ShowTimer.start()
+	
+func show_list_messages(messages, dur=1.5, interval=3.5):
+	contents = messages
+	dur = dur
+	interval = interval
+	show_single_message()
+
+func show_single_message():
+	text = contents[0]
+	show()
+	$ShowTimer.wait_time = dur
+	$ShowTimer.start()
+	
 
 func _on_ShowTimer_timeout():
 	hide()
+	$WaitTimer.wait_time = interval
+	$WaitTimer.start()
+	
+
+
+func _on_WaitTimer_timeout():
+	contents.pop_front()
+	if contents.size() > 0:
+		show_single_message()
+	
+	

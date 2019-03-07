@@ -6,7 +6,7 @@
 [ext_resource path="res://GameOver.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Win.tscn" type="PackedScene" id=5]
 
-[node name="Main" type="Node" index="0"]
+[node name="Main" type="Node"]
 
 script = ExtResource( 1 )
 
@@ -23,7 +23,16 @@ visible = false
 [node name="Win" parent="." index="3" instance=ExtResource( 5 )]
 
 visible = false
+_sections_unfolded = [ "Anchor" ]
+
+[connection signal="start_game" from="Choice" to="." method="_on_Choice_start_game"]
 
 [connection signal="main_to_difficulty_selection" from="MainTitle" to="." method="_on_MainTitle_main_to_difficulty_selection"]
+
+[connection signal="back_to_title" from="GameOver" to="." method="back_to_title"]
+
+[connection signal="restart" from="GameOver" to="." method="_on_GameOver_restart"]
+
+[connection signal="back_to_title" from="Win" to="." method="back_to_title"]
 
 

@@ -4,6 +4,8 @@ extends Node
 # var a = 2
 # var b = "textvar"
 
+var n
+
 func _ready():
 	# Called when the node is added to the scene for the first time.
 	# Initialization here
@@ -13,13 +15,24 @@ func _ready():
 #	print(generate_mob_attrs(0))
 #	print(generate_mob_attrs(1))
 #	print(generate_mob_attrs(50))
+
+	n = Node.new()
+	print(n)
+	print(has_node(n.get_path()))
+	print(weakref(n).get_ref())
+	n.queue_free()
 	
 	pass
 
-#func _process(delta):
-#	# Called every frame. Delta is time since last frame.
-#	# Update game logic here.
-#	pass
+func _process(delta):
+	# Called every frame. Delta is time since last frame.
+	# Update game logic here.
+#	print(n)
+#	print(has_node(n.get_path()))
+#	print(weakref(n).get_ref())
+
+	
+	pass
 
 func sum(arr):
 	var val = 0
@@ -48,11 +61,12 @@ func arr_times_const(arr, c):
 	
 func generate_mob_attrs(score, difficulty=0.5):
 	var attrs = {}
-	var attr_names = ["speed", "bullet_rate", "sensor_range", "hp", "toward_friend"]
+	var attr_names = ["speed", "bullet_rate", "sensor_range", "hp"]
 	var attr_values = randf_arr(attr_names.size())
 	norm(attr_values)
-	var strength = (score+1) * difficulty # Adjust this to adjust the difficulty
-	arr_times_const(attr_values, strength)
+	var strength = score * difficulty + 1 # Adjust this to adjust the difficulty
+	print("score:", score, " difficulty", difficulty, " strength", strength)
+	arr_times_const(attr_values, strength * attr_names.size())
 	for i in range(attr_names.size()):
 		attrs[attr_names[i]] = attr_values[i]
 	return attrs
